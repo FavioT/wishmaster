@@ -1,0 +1,16 @@
+{
+  "wishlist": [
+    {
+      "title": "Hello world",
+      "complete": false
+    },
+    {
+      "title": "Watch avengers",
+      "complete": true
+    },
+    {
+      "title": "Travel the world",
+      "complete": false
+    }
+  ]
+}

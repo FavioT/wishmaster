@@ -1,0 +1,67 @@
+#!/usr/bin/env node
+
+const vorpal    = require('vorpal')();
+const chalk     = require('chalk');
+
+const { getItem, newItem, completeItem } = require('./logic.js');
+
+
+vorpal
+    .command('new', 'Used to retrieve your wishlist')
+    .action(function (args, callback) {
+        const self = this;
+        return this.prompt({
+            type: 'input',
+            name: 'sentence',
+            message: chalk.green('Type in your wish -> '),
+        }, function (result) {
+            if (result.sentence) {
+                newItem(result.sentence);
+                callback();
+            } else {
+                self.log('Please provide an answer');
+                callback();
+            }
+        });
+    });
+
+vorpal
+    .command('get', 'Used to create a new wish')
+    .action(function (args, callback) {
+        getItem();
+        callback();
+    });
+
+vorpal
+    .command('complete [id]', 'Used to mark a wish as complete')
+    .action(function (args, callback) {
+        if (args.id) {
+            completeItem(args.id);
+        } else {
+            self.log('Please provide an option');
+        }
+        callback();
+    });
+
+vorpal.command('destroy database')
+    .action(function (args, callback) {
+        const self = this;
+        return this.prompt({
+            type: 'confirm',
+            name: 'continue',
+            default: false,
+            message: 'That sounds like a really bad idea. Continue?',
+        }, function (result) {
+            if (!result.continue) {
+                self.log('Good move.');
+                callback();
+            } else {
+                self.log('Time to dust off that resume.');
+                callback();
+            }
+        });
+    });
+
+vorpal
+    .delimiter('wish-master$')
+    .show();
