@@ -7,6 +7,51 @@ const { getItem, newItem, completeItem } = require('./logic.js');
 
 
 vorpal
+    .command('book <option>')
+    .option('get', 'Print foobar instead')
+    .option('new', 'Print foobar instead')
+    .option('complete', 'Print foobar instead')
+    .description('Outputs bar')
+    .action(function(args, callback) {
+        const self = this;
+        switch (args.option) {
+            case 'new':                
+                return this.prompt({
+                    type: 'input',
+                    name: 'sentence',
+                    message: chalk.green('Type in your wish -> '),
+                }, function (result) {
+                    if (result.sentence) {
+                        newItem(result.sentence);
+                        callback();
+                    } else {
+                        self.log('Please provide an answer');
+                        callback();
+                    }
+                });
+                break;
+
+            case 'get':
+                getItem();
+                callback();
+                break;
+
+            case 'complete':
+                if (args.id) {
+                    completeItem(args.id);
+                } else {
+                    self.log('Please provide an option');
+                }
+                callback();
+                break;
+
+            default:
+                break;
+        }
+        callback();
+    })
+
+vorpal
     .command('new', 'Used to retrieve your wishlist')
     .action(function (args, callback) {
         const self = this;

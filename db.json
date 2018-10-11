@@ -11,6 +11,10 @@
     {
       "title": "Travel the world",
       "complete": false
+    },
+    {
+      "title": "Learn a new language",
+      "complete": false
     }
   ]
 }
