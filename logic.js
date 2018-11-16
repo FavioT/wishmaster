@@ -5,6 +5,8 @@ const FileSync  = require('lowdb/adapters/FileSync');
 const adapter   = new FileSync('db.json');
 const db        = low(adapter);
 
+const dbFile    = require('./dbconfig');
+
 // Set some defaults (required if your JSON file is empty)
 db.defaults({ wishlist: [] }).write();
 
@@ -17,16 +19,55 @@ function newItem (sentence) {
         .write();
 }
 
-function getItem () {
-    const wishlist = db.get('wishlist').value();
-    let index = 1;
-    wishlist.forEach(wish => {
-        let wishText = `${index++}. ${wish.title}`;
-        if (wish.complete) {
-            wishText += ' ✔ ️'; // add a check mark
-        }
-        console.log(chalk.yellow(chalk.strikethrough(wishText)));
+function getBooks () {
+    dbFile.listBooks({}, function(list) {
+        let index = 1;
+        list.forEach(wish => {
+            let wishText = `${index++}. ${wish.title}`;
+            if (wish.complete) {
+                wishText += ' ✔ ️'; // add a check mark    
+            }
+            console.log(chalk.yellow(chalk.strikethrough(wishText)));
+        })
     });
+}
+
+function getMovies () {
+    dbFile.listMovies({}, function(list) {
+        let index = 1;
+        list.forEach(wish => {
+            let wishText = `${index++}. ${wish.title}`;
+            if (wish.complete) {
+                wishText += ' ✔ ️'; // add a check mark    
+            }
+            console.log(chalk.yellow(chalk.strikethrough(wishText)));
+        })
+    });
+}
+
+function getGames () {
+    dbFile.listGames({}, function(list) {
+        let index = 1;
+        list.forEach(wish => {
+            let wishText = `${index++}. ${wish.title}`;
+            if (wish.complete) {
+                wishText += ' ✔ ️'; // add a check mark    
+            }
+            console.log(chalk.yellow(chalk.strikethrough(wishText)));
+        })
+    });
+}
+
+function newBook (data) {
+    dbFile.createBook({ title: data, complete: false}, function() { return; });
+}
+
+function newMovie (data) {
+    dbFile.createMovie({ title: data, complete: false }, function() { return; });
+}
+
+function newGame (data) {
+    dbFile.createGame({ title: data, complete: false }, function() { return; });
 }
 
 function completeItem (id) {
@@ -50,5 +91,19 @@ function completeItem (id) {
     db.set(`wishlist[${n - 1}].complete`, true).write();
 }
 
+// DB connection
+dbFile.connectDB(dbFile.DB_URI, function(err) {
+    if (err) return console.log('Error on DB connection: ' + err);
+    console.log(chalk.green('DB connected!'));
+})
+
 // exports all methods
-module.exports = { getItem, newItem, completeItem };
+module.exports = { 
+    getBooks,
+    getMovies,
+    getGames,
+    newBook,
+    newMovie,
+    newGame,
+    completeItem 
+};

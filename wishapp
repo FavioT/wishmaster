@@ -3,7 +3,7 @@
 const vorpal    = require('vorpal')();
 const chalk     = require('chalk');
 
-const { getItem, newItem, completeItem } = require('./logic.js');
+const { getBooks, getMovies, getGames, newBook, newMovie, newGame } = require('./logic.js');
 
 
 vorpal
@@ -19,7 +19,7 @@ vorpal
                 return this.prompt({
                     type: 'input',
                     name: 'sentence',
-                    message: chalk.green('Type in your wish -> '),
+                    message: chalk.yellow('Type in your wish -> '),
                 }, function (result) {
                     if (result.sentence) {
                         newItem(result.sentence);
@@ -29,6 +29,7 @@ vorpal
                         callback();
                     }
                 });
+                callback();
                 break;
 
             case 'get':
@@ -52,29 +53,104 @@ vorpal
     })
 
 vorpal
-    .command('new', 'Used to retrieve your wishlist')
+    .command('new', 'Used to create a new wish') 
     .action(function (args, callback) {
         const self = this;
         return this.prompt({
-            type: 'input',
-            name: 'sentence',
-            message: chalk.green('Type in your wish -> '),
+            type:       'list',
+            name:       'option',
+            choices:    ['books', 'movies', 'games'],
+            message:    'What list do you want to show?'
         }, function (result) {
-            if (result.sentence) {
-                newItem(result.sentence);
-                callback();
-            } else {
-                self.log('Please provide an answer');
-                callback();
+            switch(result.option) {
+                case 'books':
+                    self.prompt({
+                        type:       'input',
+                        name:       'sentence',
+                        message:    chalk.yellow('Type in your wish -> '),
+                    }, function (result) {
+                        if (result.sentence) {
+                            newBook(result.sentence);
+                            self.log(chalk.green('Book wish created successfully!'));
+                        } else {
+                            self.log(chalk.red('Please provide an answer'));
+                        }
+                    });
+                    callback();
+                    return;
+                    break;
+
+                case 'movies':
+                    self.prompt({
+                        type:       'input',
+                        name:       'sentence',
+                        message:    chalk.yellow('Type in your wish -> '),
+                    }, function (result) {
+                        if (result.sentence) {
+                            newMovie(result.sentence);
+                            self.log(chalk.green('Movie wish created successfully!'));
+                        } else {
+                            self.log(chalk.red('Please provide an answer'));
+                        }
+                    });
+                    callback();
+                    break;
+
+                case 'games':
+                    self.prompt({
+                        type:       'input',
+                        name:       'sentence',
+                        message:    chalk.yellow('Type in your wish -> '),
+                    }, function (result) {
+                        if (result.sentence) {
+                            newGame(result.sentence);
+                            self.log(chalk.green('Game wish created successfully!'));
+                        } else {
+                            self.log(chalk.red('Please provide an answer'));
+                        }
+                    });
+                    callback();
+                    break;
+
+                default:
+                    self.log(result);
+                    break;
             }
+            
         });
     });
 
 vorpal
-    .command('get', 'Used to create a new wish')
+    .command('get', 'Used to retrieve your wishlist')
     .action(function (args, callback) {
-        getItem();
-        callback();
+        const self = this;
+        return this.prompt({
+            type: 'list',
+            name: 'option',
+            choices: ['books', 'movies', 'games'],
+            message: 'What list do you want to show?'
+        }, function (result) {
+            switch(result.option) {
+                case 'books':
+                    getBooks();
+                    break;
+
+                case 'movies':
+                    getMovies();
+                    callback();
+                    break;
+
+                case 'games':
+                    getGames();
+                    callback();
+                    break;
+
+                default:
+                    self.log(result);
+                    break;
+            }
+            callback();
+        });
     });
 
 vorpal
