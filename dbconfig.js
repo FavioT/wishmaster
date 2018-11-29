@@ -1,7 +1,7 @@
 const mongoose 	= require('mongoose');
 const model    	= require('./model');
 
-const DB_URI	= 'mongodb://localhost:27017/wishlist';
+const DB_URI	= 'mongodb://66.97.33.14:27017/wishlist';
 
 function connectDB(url, callback) {
 	mongoose.connect(url, { useNewUrlParser: true }, function(err) {

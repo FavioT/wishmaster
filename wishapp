@@ -6,7 +6,7 @@ const chalk     = require('chalk');
 const { getBooks, getMovies, getGames, newBook, newMovie, newGame } = require('./logic.js');
 
 
-vorpal
+/*vorpal
     .command('book <option>')
     .option('get', 'Print foobar instead')
     .option('new', 'Print foobar instead')
@@ -50,7 +50,7 @@ vorpal
                 break;
         }
         callback();
-    })
+    })*/
 
 vorpal
     .command('new', 'Used to create a new wish') 
@@ -137,12 +137,10 @@ vorpal
 
                 case 'movies':
                     getMovies();
-                    callback();
                     break;
 
                 case 'games':
                     getGames();
-                    callback();
                     break;
 
                 default:
